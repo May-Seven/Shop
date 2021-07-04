@@ -19,7 +19,9 @@
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="adddialogVisible = true">添加用户</el-button>
+          <el-button type="primary" @click="adddialogVisible = true"
+            >添加用户</el-button
+          >
         </el-col>
       </el-row>
     </el-card>
@@ -73,16 +75,33 @@
     </el-pagination>
     <!-- 添加用户对话框 -->
     <el-dialog
-      title="提示"
+      title="添加用户"
       :visible.sync="adddialogVisible"
       width="50%"
+      @close="adddialogclose"
     >
-      <span>这是一段信息</span>
+      <el-form
+        :model="addForm"
+        :rules="addFormrules"
+        ref="addFormref"
+        label-width="70px"
+      >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
+          <el-input v-model="addForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="adddialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="adddialogVisible = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="adduser">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -90,15 +109,69 @@
 <script>
 export default {
   data() {
+    var checkEmail = (rule, value, callback) => {
+      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+      if (regEmail.test(value)) {
+        // 合法邮箱
+        return callback();
+      }
+      callback(new Error("请输入合法邮箱"));
+    };
+    // 自定义手机号规则
+    var checkMobile = (rule, value, callback) => {
+      const regMobile = /^1[34578]\d{9}$/;
+      if (regMobile.test(value)) {
+        return callback();
+      }
+      // 返回一个错误提示
+      callback(new Error("请输入合法的手机号码"));
+    };
     return {
       queryinfo: {
         query: "",
         pagenum: 1,
         pagesize: 2
       },
+
+      // 添加用户的表单数据
+      addForm: {
+        username: "",
+        password: "",
+        email: "",
+        mobile: ""
+      },
+      // 添加表单验证规则
+      addFormrules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          {
+            min: 3,
+            max: 10,
+            message: "用户名的长度在3～10个字",
+            trigger: "blur"
+          }
+        ],
+        password: [
+          { required: true, message: "请输入用户密码", trigger: "blur" },
+          {
+            min: 6,
+            max: 18,
+            message: "用户密码的长度在6～18个字",
+            trigger: "blur"
+          }
+        ],
+        email: [
+          { required: true, message: "请输入邮箱", trigger: "blur" },
+          { validator: checkEmail, trigger: "blur" }
+        ],
+        mobile: [
+          { required: true, message: "请输入手机号码", trigger: "blur" },
+          { validator: checkMobile, trigger: "blur" }
+        ]
+      },
       userlist: [],
       total: 0,
-      adddialogVisible:false
+      adddialogVisible: false
     };
   },
   created() {
@@ -135,6 +208,22 @@ export default {
         return this.$message.error("更新用户状态失败");
       }
       this.$message.success("更新用户状态成功！");
+    },
+    // 监听对话框关闭
+    adddialogclose() {
+      this.$refs.addFormref.resetFields();
+    },
+    adduser() {
+      this.$refs.addFormref.validate(async valid => {
+        if(!valid)return;
+        const {data:res}=await this.$http.post('users',this.addForm);
+        if(res.meta.status!==201){
+          this.$message.error('添加用户失败！')
+        }
+        this.$message.success('添加用户成功！')
+        this.adddialogVisible=false;
+        this.getUserList();
+      });
     }
   }
 };
