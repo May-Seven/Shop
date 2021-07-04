@@ -4,14 +4,29 @@ import Router from "vue-router";
 
 const Login = () => import ("components/Login");
 const Home = () => import ("components/Home");
-  
+const Welcome = () => import('components/Welcome');
+const Users = () => import('components/user/Users.vue');
 Vue.use(Router);
 
 const router = new Router({
   routes: [
     {path: "/Login",component: Login},
     {path: "/",redirect: "/Login"},
-    {path: "/Home", component: Home}],
+    {
+      path: "/Home",
+      component: Home,
+      redirect:'/Welcome',
+      children: [
+        {
+        path: '/Welcome',
+        component: Welcome
+        },
+        {
+          path: '/users',
+          component:Users
+        }
+      ]
+    }],
   mode: "history"
 });
 

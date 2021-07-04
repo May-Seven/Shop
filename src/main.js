@@ -11,6 +11,14 @@ Vue.use(ElementUI);
 Vue.config.productionTip = false;
 
 axios.defaults.baseURL = "http://test.qhhz.xyz:8888/api/private/v1/";
+axios.interceptors.request.use(config => {
+  // console.log(config)
+
+  config.headers.Authorization = window.sessionStorage.getItem("token");
+  // 在最后必须 return config
+  return config;
+});
+
 
 Vue.prototype.$http = axios;
 
