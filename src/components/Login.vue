@@ -30,7 +30,7 @@
         </el-form-item>
         <!-- 按钮 -->
         <el-form-item class="btns">
-          <el-button type="primary" @click="login">登录</el-button>
+          <el-button :plain="true" type="primary" @click="login">登录</el-button>
           <el-button type="info" @click="resetloginform">重置</el-button>
         </el-form-item>
       </el-form>
@@ -67,9 +67,16 @@ export default {
       this.$refs.loginformref.validate(async val => {
         if (!val) return;
         const { data: res } = await this.$http.post("login", this.loginform);
-        console.log(res);
-        if (res.meta.status !== 200) return console.log("登录失败");
-        console.log("登录成功");
+        if (res.meta.status !== 200) return this.$message.error('登录失败！');
+        //弹框提示
+        this.$message({
+          message: '恭喜你，登录成功！',
+          type: 'success'
+        })
+        //将登录成功之后的token保存到客户端的sessionstorage中
+        window.sessionStorage.setItem('token',res.data.token);
+        this.$router.push('/home');
+
       });
     }
   }
