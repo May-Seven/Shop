@@ -1,32 +1,42 @@
 import Vue from "vue";
 import Router from "vue-router";
 
-
-const Login = () => import ("components/Login");
-const Home = () => import ("components/Home");
-const Welcome = () => import('components/Welcome');
-const Users = () => import('components/user/Users.vue');
+const Login = () => import("components/Login");
+const Home = () => import("components/Home");
+const Welcome = () => import("components/Welcome");
+const Users = () => import("components/user/Users.vue");
+const Rights = () => import("components/power/Rights");
+const Roles = () => import("components/power/Roles");
 Vue.use(Router);
 
 const router = new Router({
   routes: [
-    {path: "/Login",component: Login},
-    {path: "/",redirect: "/Login"},
+    { path: "/Login", component: Login },
+    { path: "/", redirect: "/Login" },
     {
       path: "/Home",
       component: Home,
-      redirect:'/Welcome',
+      redirect: "/Welcome",
       children: [
         {
-        path: '/Welcome',
-        component: Welcome
+          path: "/Welcome",
+          component: Welcome
         },
         {
-          path: '/users',
-          component:Users
+          path: "/users",
+          component: Users
+        },
+        {
+          path: "/Rights",
+          component: Rights
+        },
+        {
+          path: "/Roles",
+          component: Roles
         }
       ]
-    }],
+    }
+  ],
   mode: "history"
 });
 
