@@ -8,7 +8,10 @@ const Users = () => import("components/user/Users.vue");
 const Rights = () => import("components/power/Rights");
 const Roles = () => import("components/power/Roles");
 const Cate = () => import("components/goods/Cate");
-const Params=()=>import("components/goods/Params")
+const Params=()=>import("components/goods/Params");
+const List = () => import("components/goods/List");
+const Add = () => import("components/goods/Add");
+const Order=()=>import("components/order/Order")
 Vue.use(Router);
 
 const router = new Router({
@@ -38,11 +41,23 @@ const router = new Router({
         },
         {
           path: "/categories",
-          component:Cate
+          component: Cate
         },
         {
           path: "/Params",
-          component:Params
+          component: Params
+        },
+        {
+          path: "/goods",
+          component: List
+        },
+        {
+          path: "/goods/add",
+          component: Add
+        },
+        {
+          path: "/orders",
+          component:Order
         }
       ]
     }
