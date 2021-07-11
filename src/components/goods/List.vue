@@ -83,7 +83,6 @@ export default {
         return this.$message.error('获取商品列表失败！')
       }
       this.goodsList = res.data.goods
-      //   console.log(this.goodsList)
       this.total = res.data.total
     },
     handleSizeChange (newSize) {

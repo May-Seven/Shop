@@ -175,7 +175,7 @@
 export default {
   data() {
     var checkEmail = (rule, value, callback) => {
-      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+      const regEmail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
       if (regEmail.test(value)) {
         // 合法邮箱
         return callback();
@@ -184,7 +184,7 @@ export default {
     };
     // 自定义手机号规则
     var checkMobile = (rule, value, callback) => {
-      const regMobile = /^1[34578]\d{9}$/;
+      const regMobile = /^1(3[0-9]|4[01456879]|5[0-35-9]|6[2567]|7[0-8]|8[0-9]|9[0-35-9])\d{8}$/;
       if (regMobile.test(value)) {
         return callback();
       }
@@ -354,7 +354,7 @@ export default {
       if (res.meta.status !== 200) {
         return this.$message.error("删除失败！");
       }
-      this.$message.success("删除成功了哦！");
+      this.$message.success("删除成功！");
       this.getUserList();
     },
     // 设置角色
